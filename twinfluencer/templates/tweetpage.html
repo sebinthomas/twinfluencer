@@ -86,8 +86,8 @@ $(function(){
                     li.append(piclink);
                     var liBody=$("<div class='media-body'></div>");
                     var userName=$("<h6></h6>");
-                    userName.text("@"+cData.user.screen_name);
-                    userName.append("<span class='small'>   "+cData.user.name+"</span>");
+                    userName.html("<a href='http://twitter.com/"+cData.user.screen_name+"'>@"+cData.user.screen_name+"</a>");
+                    userName.append("<span class='small'>   "+cData.user.name+"</span> <span class='badge'>"+String(i+1)+"</span>");
                     liBody.append(userName);
                     liBody.append("<ul class='list-inline'><li>Followers: <b>"+cData.user.followers_count+"</b></li><li> Following: <b> "+cData.user.friends_count+"</b></li></ul>"); 
                     li.append(liBody); 
