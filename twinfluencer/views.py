@@ -43,7 +43,7 @@ def login():
 def authorized(resp):
     next_url=request.args.get("next") or url_for("rank")
     if resp is None:
-        flash("denied")
+        print "request denied" 
         return redirect(next_url)
     user=User.query.filter_by(name=resp["screen_name"]).first()
 
@@ -52,6 +52,7 @@ def authorized(resp):
         db.session.add(user)
         db.session.commit()
     session["user_id"]=user.id
+    print "user @ %s registered" %user.id
     return redirect(next_url)
 
 # view that returns a JSON object of the retweets which is then processed clientside.
@@ -70,6 +71,7 @@ def stats():
                 data={"status":{"message":"clear","code":500},"data":resp.data}
             else:
                 data={"status":{"message":"response from twitter is bad","code":503}}
+            print "stats for id %s queried"%id    
             return jsonify(**data)
 
 
