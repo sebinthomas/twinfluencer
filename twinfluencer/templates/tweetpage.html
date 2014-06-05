@@ -1,0 +1,109 @@
+{% extends "top.html" %}
+{% block body %}
+
+<script type="text/javascript">
+$SCRIPT_ROOT={{ request.script_root|tojson|safe }};
+//$JSON=null; 
+</script>
+
+
+
+<div class="container padder">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4 class="panel-title"><span class="fui-heart"> Twinfluencers</span></h4></div>
+        <div class="panel-body">
+            <p class="lead"> Paste the tweet link into the box to find out your recent influencers.</p>
+            <div class="input-group">
+                <input type="text" id="twitterid" placeholder="Enter something" class="form-control" />
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" id="rtbutton" type="button">Go!</button>
+                </span>
+            </div>
+            <ul class="media-list padder" id="result" >
+
+            </ul>
+        </div>
+    </div> 
+</div>
+    
+
+
+
+
+<script type="text/javascript">
+$(function(){
+  // clean this mess up ! separate the representation and logic ! function in getJSON doesnt have to handle everything !!
+    var idGetter=function(url){
+        var tweet_url=/^https?:\/\/(?:www\.)?twitter\.com\/(?:#!\/)?(?:\w+)\/status(?:es)?\/(\d+)#?$/;
+        if(tweet_url.test(url))
+            {
+            return (url.match(tweet_url)[1]);
+            } 
+        else
+            {
+            return null;
+            }
+        };
+        
+        
+    var loadRes=function(){
+        var tweetID=idGetter($('#twitterid').val());
+        //$SCRIPT_ROOT+'/stats' is the url
+        var result=$("#result"); 
+        result.html("");
+        var preloader=$("<div></div>",{"class":"mid_preloader"}).append($("<img>").attr({"src":"{{url_for('static',filename='css/images/preloader.gif')}}", alt:"loading"}));
+        result.append(preloader);
+        $.getJSON($SCRIPT_ROOT+'/stats',{id:tweetID}, 
+        function(json) {
+            preloader.hide();
+            // json.data[].user
+            // if json.status is clear and if there is json.data then display all user details
+            if(json.status.code===500)//clear
+            { 
+                if(json.data.length>0) // The message has retweets
+                {
+                
+                
+                // Sorts the data on the basis of date with newest first
+                json.data.sort(function(a,b){return parseFloat(Date.parse(b.created_at))-parseFloat(Date.parse(a.created_at))});
+                //slices the data so that recent 10 elements are obtained
+                var newData=json.data.slice(0,10);
+                // sorts the data in ascending order from least to most
+                newData.sort(function(a,b){ return (parseInt(b.user.followers_count)-parseInt(a.user.followers_count))});
+                
+                for( var i=0;i<newData.length;i++)
+                    {
+                    var cData=newData[i]; 
+                    var li=$("<li></li>");
+                    li.addClass("media");
+                    var piclink= $("<a></a>");
+                    piclink.addClass("pull-left");
+                    piclink.attr("href","http://twitter.com/"+cData.user.screen_name);
+                    var pic=$("<img>");
+                    pic.addClass("media-object img-circle");
+                    pic.attr("src",cData.user.profile_image_url)
+                    piclink.append(pic);
+                    li.append(piclink);
+                    var liBody=$("<div class='media-body'></div>");
+                    var userName=$("<h6></h6>");
+                    userName.text("@"+cData.user.screen_name);
+                    userName.append("<span class='small'>   "+cData.user.name+"</span>");
+                    liBody.append(userName);
+                    liBody.append("<ul class='list-inline'><li>Followers: <b>"+cData.user.followers_count+"</b></li><li> Following: <b> "+cData.user.friends_count+"</b></li></ul>"); 
+                    li.append(liBody); 
+                    result.append(li);
+                    result.append("<hr>");
+
+                    }
+         
+                //$JSON=newData; for testing purposes
+                }
+            
+            }
+        });
+    };
+    $('#rtbutton').click(loadRes);
+});
+</script>
+
+{% endblock %}

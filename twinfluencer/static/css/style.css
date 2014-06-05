@@ -1,0 +1,66 @@
+
+html
+{
+position: relative;
+min-height: 100%;
+}
+
+body
+{
+background-color: #2C3E50;
+margin-bottom: 60px;
+}
+
+#footer
+{
+position: absolute;
+bottom:0;
+width: 100%;
+height: 60px;
+}
+
+.container {
+  width: auto;
+  max-width: 640px;
+  padding: 0 15px;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+.padder
+{
+padding-top: 50px;
+padding-bottom:50px;
+}
+
+.padder_xl
+{
+padding-top:10%;
+}
+.mid_preloader
+{
+width: 32px;
+height: 32px;
+margin-left:auto;
+margin-right:auto;
+}
+
+.white
+{
+color:#ECF0F1;
+}
+.silver
+{
+color: #BDC3C7;
+}
+
+.logo
+{
+display: inline-block;
+margin-top:-10px;
+padding-right:5px;
+overflow: hidden;
+width: 100px;
+height: 100px;
+}

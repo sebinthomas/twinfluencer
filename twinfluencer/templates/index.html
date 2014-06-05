@@ -1,0 +1,21 @@
+{% extends "top.html" %}
+{% block body %}
+
+<div class="container padder_xl">
+<div class="mid">
+    <div class="row">
+<div class="col-md-2">
+<img src="{{url_for('static',filename='css/images/twitter.png')}}" class="logo"></div>
+<div class="col-md-10">
+    <h1 class="white">Twinfluencer</h1></div></div>
+    <p class="silver lead">
+    Twinfluencer gives you the recent retweeters of a tweet in a ranked manner </p>
+    <p class="text-center"><a class="btn btn-primary btn-lg" role="button" href="{{url_for('rank')}}">Login<span class="btn-tip">with twitter</span></a></p>
+    </div>
+   
+</div>
+
+
+
+
+{% endblock %}
