@@ -1,0 +1,9 @@
+Flask==0.10.1
+Flask-OAuth==0.12
+Flask-SQLAlchemy==1.0
+Flask-Script==0.6.7
+Jinja2==2.6
+SQLAlchemy==0.9.3
+Werkzeug==0.9.4
+oauth==1.0.1
+oauth2==1.5.211
