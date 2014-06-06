@@ -24,7 +24,7 @@ class TestSuite(unittest.TestCase):
    # Test to check if the /stats page works
     def test_stats(self):
         response=self.app.get("/stats")
-        assert json.loads({"status":{"message":"Bad login","code":501}}) in response.data
+        assert json.dumps({"status":{"message":"Bad login","code":501}}) in response.data
                  
 
         
