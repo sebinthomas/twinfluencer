@@ -64,13 +64,13 @@ def stats():
     else:
         id= request.args.get("id")
         if(id==None):
-            return jsonify({"status":{"message":"no ID Given","code":502}})
+            return jsonify({"status":{"message":"no proper tweet ID has been provided","code":502}})
         else:
             resp=twitter.get("statuses/retweets/"+id+".json")
             if resp.status==200:
                 data={"status":{"message":"clear","code":500},"data":resp.data}
             else:
-                data={"status":{"message":"response from twitter is bad","code":503}}
+                data={"status":{"message":"Response from twitter is bad.","code":503}}
             print "stats for id %s queried"%id    
             return jsonify(**data)
 

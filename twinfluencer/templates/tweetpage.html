@@ -32,7 +32,8 @@ $SCRIPT_ROOT={{ request.script_root|tojson|safe }};
 
 <script type="text/javascript">
 $(function(){
-  // clean this mess up ! separate the representation and logic ! function in getJSON doesnt have to handle everything !!
+    var result=$("#result");
+    // clean this mess up ! separate the representation and logic ! function in getJSON doesnt have to handle everything !!
     var idGetter=function(url){
         var tweet_url=/^https?:\/\/(?:www\.)?twitter\.com\/(?:#!\/)?(?:\w+)\/status(?:es)?\/(\d+)#?$/;
         if(tweet_url.test(url))
@@ -45,11 +46,21 @@ $(function(){
             }
         };
         
-        
+    var error= function(message)
+    {
+        var err=$("<div class='alert alert-danger'></div>");
+        err.append("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>");
+        err.append("<strong> "+message+"</strong>");
+        result.append(err);
+
+    }    
     var loadRes=function(){
         var tweetID=idGetter($('#twitterid').val());
-        //$SCRIPT_ROOT+'/stats' is the url
-        var result=$("#result"); 
+        if (tweetID===null)
+        {
+        error("you haven't added a tweet link");
+        return null;
+        }
         result.html("");
         var preloader=$("<div></div>",{"class":"mid_preloader"}).append($("<img>").attr({"src":"{{url_for('static',filename='css/images/preloader.gif')}}", alt:"loading"}));
         result.append(preloader);
@@ -73,6 +84,7 @@ $(function(){
                 
                 for( var i=0;i<newData.length;i++)
                     {
+                    // make display into a separate function and use that
                     var cData=newData[i]; 
                     var li=$("<li></li>");
                     li.addClass("media");
@@ -98,22 +110,18 @@ $(function(){
                 }    
                 else 
                 {
-                var noRT=$("<div class='alert alert-danger'></div>");
-                noRT.append("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>");
-                noRT.append("<strong> This tweet doesn't appear to have been retweeted </strong>");
-                
+                error("This tweet doesn't appear to be retweeted");   
                 }
                 //$JSON=newData; for testing purposes
             }
             else 
             {
-            var noID=$("<div class='alert alert-danger'></div>");
-            noID.append("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>");
-            noID.append("<strong> "+json.status.message+"</strong>");
+            error(json.status.message);
             }
             
             
         });
+        return 0;
     };
     $('#rtbutton').click(loadRes);
 });
