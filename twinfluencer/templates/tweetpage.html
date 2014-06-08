@@ -33,7 +33,7 @@ $SCRIPT_ROOT={{ request.script_root|tojson|safe }};
 <script type="text/javascript">
 $(function(){
     var result=$("#result");
-    // clean this mess up ! separate the representation and logic ! function in getJSON doesnt have to handle everything !!
+    // would be nice to see if in a separate file
     var idGetter=function(url){
         var tweet_url=/^https?:\/\/(?:www\.)?twitter\.com\/(?:#!\/)?(?:\w+)\/status(?:es)?\/(\d+)#?$/;
         if(tweet_url.test(url))
@@ -54,6 +54,33 @@ $(function(){
         result.append(err);
 
     }    
+    
+    var displayUsers=function(cData,rank)
+    {
+                    
+        var li=$("<li></li>");
+        li.addClass("media");
+        var piclink= $("<a></a>");
+        piclink.addClass("pull-left");
+        piclink.attr("href","http://twitter.com/"+cData.user.screen_name);
+        var pic=$("<img>");
+        pic.addClass("media-object img-circle");
+        pic.attr("src",cData.user.profile_image_url)
+        piclink.append(pic);
+        li.append(piclink);
+        var liBody=$("<div class='media-body'></div>");
+        var userName=$("<h6></h6>");
+        userName.html("<a href='http://twitter.com/"+cData.user.screen_name+"'>@"+cData.user.screen_name+"</a>");
+        userName.append("<span class='small'>   "+cData.user.name+"</span> <span class='badge'>"+String(rank+1)+"</span>");
+        liBody.append(userName);
+        liBody.append("<ul class='list-inline'><li>Followers: <b>"+cData.user.followers_count+"</b></li><li> Following: <b> "+cData.user.friends_count+"</b></li></ul>"); 
+        li.append(liBody); 
+        result.append(li);
+        result.append("<hr>");
+        return null;
+    }
+    
+    
     var loadRes=function(){
         var tweetID=idGetter($('#twitterid').val());
         if (tweetID===null)
@@ -84,28 +111,8 @@ $(function(){
                 
                 for( var i=0;i<newData.length;i++)
                     {
-                    // make display into a separate function and use that
                     var cData=newData[i]; 
-                    var li=$("<li></li>");
-                    li.addClass("media");
-                    var piclink= $("<a></a>");
-                    piclink.addClass("pull-left");
-                    piclink.attr("href","http://twitter.com/"+cData.user.screen_name);
-                    var pic=$("<img>");
-                    pic.addClass("media-object img-circle");
-                    pic.attr("src",cData.user.profile_image_url)
-                    piclink.append(pic);
-                    li.append(piclink);
-                    var liBody=$("<div class='media-body'></div>");
-                    var userName=$("<h6></h6>");
-                    userName.html("<a href='http://twitter.com/"+cData.user.screen_name+"'>@"+cData.user.screen_name+"</a>");
-                    userName.append("<span class='small'>   "+cData.user.name+"</span> <span class='badge'>"+String(i+1)+"</span>");
-                    liBody.append(userName);
-                    liBody.append("<ul class='list-inline'><li>Followers: <b>"+cData.user.followers_count+"</b></li><li> Following: <b> "+cData.user.friends_count+"</b></li></ul>"); 
-                    li.append(liBody); 
-                    result.append(li);
-                    result.append("<hr>");
-
+                    displayUsers(cData,i);
                     }
                 }    
                 else 
